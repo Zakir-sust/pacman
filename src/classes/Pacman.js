@@ -39,13 +39,14 @@ export default class Pacman{
         this.requestedMove = val
     }
     
-    draw(ctx,pause){
+    draw(ctx,pause,enemies){
         if (!pause) {
             this.#move();
           
             this.#animate();
             this.#eatPowerDot();
             this.#eatDot();
+            this.#eatGhost(enemies);
         }
     
         const halfSize = this.size/2;
@@ -63,6 +64,14 @@ export default class Pacman{
         )
         ctx.restore();
     }
+    #eatGhost(enemies) {
+        if (this.powerDotActive) {
+          const collideEnemies = enemies.filter((enemy) => enemy.collideWith(this));
+          collideEnemies.forEach((enemy) => {
+            enemies.splice(enemies.indexOf(enemy), 1);
+          });
+        }
+      }
     #loadPacmanImages(){
         const p0 = new Image();
         p0.src=pac0;

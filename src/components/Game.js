@@ -21,8 +21,8 @@ export default function Game() {
         const render = ()=>{
             // console.log("gameLoop")
             tileMap.draw(ctx);
-            pacman.draw(ctx,pause());
-            // enemies[0].draw(ctx);
+            pacman.draw(ctx,pause(),enemies);
+            
             enemies.forEach((enemy)=>enemy.draw(ctx,pause(),pacman));
             checkGameOver();
             if(!pause()){
