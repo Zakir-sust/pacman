@@ -143,4 +143,13 @@ export default class TileMap{
         }
         return false;
     }
+    didWin(){
+        let remaining = this.#dotsLeft();
+        console.log('ramaining = ',remaining)
+        return remaining === 0;
+    }
+    #dotsLeft(){
+        let r  = this.map.flat().filter(tile=>tile===0).length;
+        return r;
+    }
 }

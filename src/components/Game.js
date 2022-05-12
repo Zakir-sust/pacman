@@ -30,11 +30,18 @@ export default function Game() {
             }
             console.log('pause values ',gameOver,gameWin,pacman.madeFirstMove)
         }
+        
         function checkGameOver(){
             if(!gameOver){
                 gameOver = isGameOver();
                 if(gameOver){
-                    console.log('gameOver');
+                    console.log('GAME OVER');
+                }
+            }
+            if(!gameWin){
+                gameWin = tileMap.didWin();
+                if(gameWin){
+                    console.log("WIN!!!")
                 }
             }
         }

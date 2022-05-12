@@ -37,7 +37,7 @@ export default class Enemy{
             // this.#setImageWhenPowerDotIsActive(pacman);
             if(pacman.powerDotAboutToExpire){
 
-                console.log('about to expire')
+                // console.log('about to expire')
                 this.scaredAboutToExpireTimer--;
                 if(this.scaredAboutToExpireTimer===0){
                     this.scaredAboutToExpireTimer=this.scaredAboutToExpireTimerDefault;
