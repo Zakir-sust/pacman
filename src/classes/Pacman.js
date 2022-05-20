@@ -37,6 +37,7 @@ export default class Pacman{
         if(event.keyCode<37||event.keyCode>40)return
         let val = mp[event.keyCode];
         this.requestedMove = val
+        this.madeFirstMove=true;
     }
     
     draw(ctx,pause,enemies){
