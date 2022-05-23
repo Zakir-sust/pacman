@@ -111,7 +111,7 @@ export default class TileMap{
             }
         }
         
-        this.drawPath(ctx,ara);
+        // this.drawPath(ctx,ara);
     }
     getPacman(velocity){
         for(let r=0;r<this.map.length;r++){

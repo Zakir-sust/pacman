@@ -43,9 +43,13 @@ export default function Game() {
             }
             if(!gameWin){
                 gameWin = tileMap.didWin();
+                
                 if(gameWin){
                     console.log("WIN!!!")
-                        setCnt(1-cnt);   
+                    if(cnt===2)setCnt(0);
+                    else{
+                        setCnt(cnt+1);   
+                    }
                 }
             }
         }
