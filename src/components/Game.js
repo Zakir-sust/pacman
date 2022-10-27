@@ -5,10 +5,10 @@ import map from '../classes/map.js'
 // import Pacman from '../classes/Pacman.js'
 export default function Game() {
     const canvasRef = useRef(null)
-    const [cnt,setCnt] = useState(2);
+    const [cnt,setCnt] = useState(0);
        
     useEffect(()=>{
-        console.log('useEffect cnt = ',cnt);
+        // console.log('useEffect cnt = ',cnt);
         const canvas = canvasRef.current
         const ctx = canvas.getContext('2d')
         const tileSize = 32
@@ -23,7 +23,7 @@ export default function Game() {
         let gameWin = false;
         tileMap.setCanvasSize(canvas)
         const render = ()=>{
-            console.log("gameLoop - ",cnt)
+            // console.log("gameLoop - ",cnt)
             tileMap.draw(ctx);
             pacman.draw(ctx,pause(),enemies);
             
@@ -46,7 +46,7 @@ export default function Game() {
                 
                 if(gameWin){
                     console.log("WIN!!!")
-                    if(cnt===2)setCnt(0);
+                    if(cnt===2)setCnt(0);           ///change map
                     else{
                         setCnt(cnt+1);   
                     }
@@ -63,7 +63,6 @@ export default function Game() {
         function pause() {
             return !pacman.madeFirstMove || gameOver || gameWin;
         }
-        
         render()
     },[cnt])
     return (

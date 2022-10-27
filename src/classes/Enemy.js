@@ -2,6 +2,7 @@ import ghost from '../images/ghost.png'
 import scaredGhost from '../images/scaredGhost.png';
 import scaredGhost2 from "../images/scaredGhost2.png";
 import pac from '../images/pac1.png';
+import A_star from './A_star.js';
 const fx = [-1,0,1,0];          ///left,up,right,down
 const fy = [0,-1,0,1];
 const rot = [180,270,0,90];
@@ -22,7 +23,71 @@ export default class Enemy{
         this.scaredAboutToExpireTimer = this.scaredAboutToExpireTimerDefault;
     }
 
+    drawRect(ctx,x, y)
+    {
+        ctx.beginPath();
+        ctx.fillStyle="red";
+        // ctx.arc(5*32,6*32,10,0,2*Math.PI);
+        ctx.fillRect(x*this.tileSize+12,y*this.tileSize+12,8,8);
+        ctx.stroke();
+        ctx.fillStyle="black";
+    }
+    drawPath(ctx,ara){
+        for(let i=0;i<ara.length;i++){
+            this.drawRect(ctx,ara[i][1],ara[i][0]);
+        }
+    }
+    getPacmanNextPosition(x,y,move){
+        let newX=x/this.tileSize,newY=y/this.tileSize;
+        if(move === 0)newX = Math.floor(x/this.tileSize);
+        if(move === 1)newY = Math.floor(y/this.tileSize);
+        if(move === 2)newX = Math.ceil(x/this.tileSize);
+        if(move === 3)newY = Math.ceil(y/this.tileSize);
+        return [newX,newY];
+    }
+    getMove(x,y){
+        for(let k=0;k<4;k++){
+            if(fx[k]==x&&fy[k]==y)
+                return k;
+        }
+        return -1;
+    }
+    getNextMove(ara)
+    {
+        console.log('x,y ',this.x/this.tileSize,this.y/this.tileSize);
+        for(let i=ara.length-1;i>=0;i--){
+            let mv = this.getMove(ara[i][0]-Math.round(this.y/this.tileSize),ara[i][1]-Math.round(this.x/this.tileSize))
+            console.log('cur ',ara[i][0],ara[i][1],'mv ',mv);
+            if(mv>=0)
+                return mv;
+        }
+        return this.currentMove;
+    }
+    getNextCell(src,dest)
+    {
+        let path = A_star(src,dest,this.tileMap.map);
+        let ara = []
+        for(let i=0;i<Math.min(path.length,3);i++)
+        ara.push(path[i])
+        console.log("path = ",src,dest);
+        console.log('ara ',ara)
+        let mv = this.getNextMove(ara);
+        // this.currentMove = mv;
+        console.log('mv ',mv);
+        console.log(path)
+        
+    }
+    
     draw(ctx,pause,pacman){
+        // let destination = [pacman.y/32,pacman.x/32];
+        // let src = [this.y/32,this.x/32];
+        // let path = A_star(src,destination,this.tileMap.map)
+        // this.drawPath(ctx,path);
+        
+        let src = [Math.round(this.x/32),Math.round(this.y/32)];
+        let dest = this.getPacmanNextPosition(pacman.x,pacman.y,pacman.currentMove);
+        this.getNextCell(src,dest);
+        // console.log('src,dst,nxt_cell',src,dest,nextCell)
         // console.log('enemy draw',this.x,this.y,this.tileSize)
         if (!pause) {
             this.#move();
@@ -34,7 +99,7 @@ export default class Enemy{
     #setImage(ctx,pacman){
         // console.log('setImage',pacman)
         if(pacman.powerDotActive){
-            // this.#setImageWhenPowerDotIsActive(pacman);
+            this.#setImageWhenPowerDotIsActive(pacman);
             if(pacman.powerDotAboutToExpire){
 
                 // console.log('about to expire')
@@ -110,7 +175,6 @@ export default class Enemy{
                     this.currentMove = newMove;
                 }
             }
-
             
         }
     }

@@ -1,3 +1,5 @@
-const  A_star = require("./A_star")
+let ara = [[2,3],[1,5],[7,8]];
 
-A_star(2,5);
+for(let i = 0;i<ara.length;i++){
+    
+}

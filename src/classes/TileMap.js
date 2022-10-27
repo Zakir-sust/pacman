@@ -3,7 +3,6 @@ import {useState,useEffect} from 'react'
 import wall from '../images/wall.png'
 import yellowDot from '../images/yellowDot.png'
 import pinkDot from '../images/pinkDot.png'
-
 import Pacman from './Pacman.js'
 import tile1 from '../images/tile1.png'
 import tile2 from '../images/tile2.png'
@@ -11,19 +10,20 @@ import tile3 from '../images/tile3.png'
 import tile4 from '../images/tile4.png'
 import _ from 'lodash'
 import Enemy from './Enemy.js'
+import A_star from './A_star.js'
 const fx = [-1,0,1,0];          ///left,up,right,down
 const fy = [0,-1,0,1];
 
-function cloneObject(obj) {
-    var clone = {};
-    for(var i in obj) {
-        if(obj[i] != null &&  typeof(obj[i])=="object")
-            clone[i] = cloneObject(obj[i]);
-        else
-            clone[i] = obj[i];
-    }
-    return clone;
-}
+// function cloneObject(obj) {
+//     var clone = {};
+//     for(var i in obj) {
+//         if(obj[i] != null &&  typeof(obj[i])=="object")
+//             clone[i] = cloneObject(obj[i]);
+//         else
+//             clone[i] = obj[i];
+//     }
+//     return clone;
+// }
 export default class TileMap{
     
     constructor(map,tileSize){
@@ -63,39 +63,14 @@ export default class TileMap{
         canvas.height= this.map.length*this.tileSize
         // console.log('width:',canvas.width,' height:',canvas.height)
     }
-    drawRect(ctx,x, y)
-    {
-        ctx.beginPath();
-        ctx.fillStyle="red";
-        ctx.arc(5*32,6*32,10,0,2*Math.PI);
-        ctx.fillRect(x*32+12,y*32+12,8,8);
-        ctx.stroke();
-        ctx.fillStyle="black";
-    }
-    drawPath(ctx,ara){
-        for(let i=0;i<ara.length;i++){
-            this.drawRect(ctx,ara[i][0],ara[i][1]);
-        }
-    }
+
+    
     draw(ctx)
     {
-        let ara  = [[ 1, 1 ] ,
-        [ 1, 2 ] ,
-        [ 1, 3 ] ,
-        [ 1, 4 ] ,
-        [ 1, 5 ] ,
-        [ 1, 6 ] ,
-        [ 2, 6 ] ,
-        [ 3, 6 ] ,
-        [ 3, 7 ] ,
-        [ 3, 8 ] ,
-        [ 4, 8 ] ,
-        [ 5, 8 ] ,
-        [ 6, 8 ] ,
-        [ 7, 8 ] ,
-        [ 8, 8 ] ,
-        ]        
-        
+        // let ara  = [[ 1, 1 ] ,[ 1, 2 ] ,[ 1, 3 ] ,[ 1, 4 ] ,[ 1, 5 ] ,[ 1, 6 ] ,[ 2, 6 ] ,[ 3, 6 ] ,[ 3, 7 ] ,[ 3, 8 ] ,[ 4, 8 ] ,[ 5, 8 ] ,[ 6, 8 ] ,[ 7, 8 ] ,[ 8, 8 ] ,]        
+        // let src = [this.Pacman.]
+        // let path = A_star([1,1],[10,10],this.map)
+        // console.log('path = ',path);
         this.#animatePowerDot();
         for(let row = 0;row<this.map.length;row++){
             for(let column = 0;column<this.map[0].length;column++){
@@ -111,7 +86,7 @@ export default class TileMap{
             }
         }
         
-        // this.drawPath(ctx,ara);
+        // this.drawPath(ctx,path);
     }
     getPacman(velocity){
         for(let r=0;r<this.map.length;r++){
@@ -193,7 +168,7 @@ export default class TileMap{
     }
     didWin(){
         let remaining = this.#dotsLeft();
-        // console.log('ramaining = ',remaining)
+        console.log('ramaining = ',remaining)
         return remaining <= 0;         ///must change here
     }
     #dotsLeft(){
