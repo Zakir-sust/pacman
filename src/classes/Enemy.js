@@ -90,7 +90,7 @@ export default class Enemy{
         // console.log('enemy draw',this.x,this.y,this.tileSize)
         if (!pause) {
             this.#move();
-            this.#changeDirection(src,dest);
+            this.#changeDirection(src,dest,pacman.powerDotActive);
         }
       
         this.#setImage(ctx,pacman)
@@ -159,23 +159,30 @@ export default class Enemy{
             this.y += fy[this.currentMove]*this.velocity;
         }
     }
-    #changeDirection(src,dest){
+    #randomMove()
+    {
+            this.directionTimer--;
+            // console.log('enemy direction timer',this.directionTimer,this.x,this.y,this.currentMove,this)
+            if(this.directionTimer===0)
+            {
+                this.directionTimer = this.directionTimerDefault;
+                let newMove = Math.floor(Math.random()*4);
+                if(Math.abs(newMove-this.currentMove)==2)return;
+                // console.log('newMove ',newMove,'timer',this.directionTimer);
+                if(!this.tileMap.checkCollision(this.x,this.y,newMove)){
+                    this.currentMove = newMove;
+                }
+            }
+    }
+    #changeDirection(src,dest,val){
         if(this.x%this.tileSize===0 && this.y%this.tileSize === 0)
         {
-            this.getNextCell(src,dest);
+            if(val)
+                this.#randomMove()
+            else
+                this.getNextCell(src,dest);
             ////////////////////
-            // this.directionTimer--;
-            // // console.log('enemy direction timer',this.directionTimer,this.x,this.y,this.currentMove,this)
-            // if(this.directionTimer===0)
-            // {
-            //     this.directionTimer = this.directionTimerDefault;
-            //     let newMove = Math.floor(Math.random()*4);
-            //     if(Math.abs(newMove-this.currentMove)==2)return;
-            //     // console.log('newMove ',newMove,'timer',this.directionTimer);
-            //     if(!this.tileMap.checkCollision(this.x,this.y,newMove)){
-            //         this.currentMove = newMove;
-            //     }
-            // }
+            
             
         }
     }
