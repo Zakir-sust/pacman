@@ -46,6 +46,7 @@ export default class Enemy{
         return [newX,newY];
     }
     getMove(x,y){
+        
         for(let k=0;k<4;k++){
             if(fx[k]==x&&fy[k]==y)
                 return k;
@@ -56,7 +57,7 @@ export default class Enemy{
     {
         console.log('x,y ',this.x/this.tileSize,this.y/this.tileSize);
         for(let i=ara.length-1;i>=0;i--){
-            let mv = this.getMove(ara[i][0]-Math.round(this.y/this.tileSize),ara[i][1]-Math.round(this.x/this.tileSize))
+            let mv = this.getMove(ara[i][1]-Math.round(this.x/this.tileSize),ara[i][0]-Math.round(this.y/this.tileSize))
             console.log('cur ',ara[i][0],ara[i][1],'mv ',mv);
             if(mv>=0)
                 return mv;
@@ -72,26 +73,24 @@ export default class Enemy{
         console.log("path = ",src,dest);
         console.log('ara ',ara)
         let mv = this.getNextMove(ara);
-        // this.currentMove = mv;
+        this.currentMove = mv;
         console.log('mv ',mv);
         console.log(path)
-        
     }
     
     draw(ctx,pause,pacman){
+        let src = [Math.round(this.x/32),Math.round(this.y/32)];
+        let dest = this.getPacmanNextPosition(pacman.x,pacman.y,pacman.currentMove);
+            
         // let destination = [pacman.y/32,pacman.x/32];
         // let src = [this.y/32,this.x/32];
         // let path = A_star(src,destination,this.tileMap.map)
         // this.drawPath(ctx,path);
-        
-        let src = [Math.round(this.x/32),Math.round(this.y/32)];
-        let dest = this.getPacmanNextPosition(pacman.x,pacman.y,pacman.currentMove);
-        this.getNextCell(src,dest);
         // console.log('src,dst,nxt_cell',src,dest,nextCell)
         // console.log('enemy draw',this.x,this.y,this.tileSize)
         if (!pause) {
             this.#move();
-            this.#changeDirection();
+            this.#changeDirection(src,dest);
         }
       
         this.#setImage(ctx,pacman)
@@ -160,21 +159,23 @@ export default class Enemy{
             this.y += fy[this.currentMove]*this.velocity;
         }
     }
-    #changeDirection(){
+    #changeDirection(src,dest){
         if(this.x%this.tileSize===0 && this.y%this.tileSize === 0)
         {
-            this.directionTimer--;
-            // console.log('enemy direction timer',this.directionTimer,this.x,this.y,this.currentMove,this)
-            if(this.directionTimer===0)
-            {
-                this.directionTimer = this.directionTimerDefault;
-                let newMove = Math.floor(Math.random()*4);
-                if(Math.abs(newMove-this.currentMove)==2)return;
-                // console.log('newMove ',newMove,'timer',this.directionTimer);
-                if(!this.tileMap.checkCollision(this.x,this.y,newMove)){
-                    this.currentMove = newMove;
-                }
-            }
+            this.getNextCell(src,dest);
+            ////////////////////
+            // this.directionTimer--;
+            // // console.log('enemy direction timer',this.directionTimer,this.x,this.y,this.currentMove,this)
+            // if(this.directionTimer===0)
+            // {
+            //     this.directionTimer = this.directionTimerDefault;
+            //     let newMove = Math.floor(Math.random()*4);
+            //     if(Math.abs(newMove-this.currentMove)==2)return;
+            //     // console.log('newMove ',newMove,'timer',this.directionTimer);
+            //     if(!this.tileMap.checkCollision(this.x,this.y,newMove)){
+            //         this.currentMove = newMove;
+            //     }
+            // }
             
         }
     }
